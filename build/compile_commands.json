@@ -1,0 +1,12 @@
+[
+{
+  "directory": "C:/Users/DASERDERT/Desktop/CG/aufgabe5CG/build",
+  "command": "C:\\MinGW\\bin\\g++.exe -DUNIX  -g -Wall -DDEBUG -D_DEBUG -ggdb   -pedantic -fPIC -o CMakeFiles\\Raytracer.dir\\main.cpp.obj -c C:\\Users\\DASERDERT\\Desktop\\CG\\aufgabe5CG\\code\\main.cpp",
+  "file": "C:/Users/DASERDERT/Desktop/CG/aufgabe5CG/code/main.cpp"
+},
+{
+  "directory": "C:/Users/DASERDERT/Desktop/CG/aufgabe5CG/build",
+  "command": "C:\\MinGW\\bin\\g++.exe -DUNIX  -g -Wall -DDEBUG -D_DEBUG -ggdb   -pedantic -fPIC -o CMakeFiles\\Raytracer.dir\\sceneobject.cpp.obj -c C:\\Users\\DASERDERT\\Desktop\\CG\\aufgabe5CG\\code\\sceneobject.cpp",
+  "file": "C:/Users/DASERDERT/Desktop/CG/aufgabe5CG/code/sceneobject.cpp"
+}
+]

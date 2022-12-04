@@ -1,0 +1,3 @@
+C:/Users/DASERDERT/Desktop/CG/aufgabe5CG/build/CMakeFiles/Raytracer.dir
+C:/Users/DASERDERT/Desktop/CG/aufgabe5CG/build/CMakeFiles/edit_cache.dir
+C:/Users/DASERDERT/Desktop/CG/aufgabe5CG/build/CMakeFiles/rebuild_cache.dir
