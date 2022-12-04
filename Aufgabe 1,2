@@ -1,0 +1,23 @@
+1.1 Mögliche Parameter die bei einer BRDF eingehen könnten wären die Strahldichte/Radiance,
+die Irradiance, der Polarwinkel und der Azimutwinkel, die Isotropie sowie die Anisotropie.
+
+1.2 Der Wert einer BRDF für einen bestimmten Parametersatz beschreibt dessen Reflexionseigen-
+schaften an einem Oberflächenpunkt.
+
+1.3 Durch Messungen/Simulation von realen Materialproben und durch Approximation von analy-
+tischen Funktionen.
+
+1.4: Physikalische Modelle sind exakt nach den Vorlagen in der realen Welt abgeleitet währen phänomenologische Modelle nur Annäherungen und Vereinfachungen der exakten physikalischen Modelle sind 
+
+2.1 Die diffuse Reflextion reflektiert das Licht gleichmäßig stark in alle Richungen, somit ist die
+Intensität im gegensatz zu spekularen Reflexion nicht abhängig vom Betrachtungswinkel. Bei
+der spekularen Reflexion wird das Licht nur in die Richtung des Reflextionsvektors gespiegelt.
+Der Begriff „glossy“ beschreibt eine imperfekt spieglende Glanzoberfäche, hierbei entsteht eine
+Mischreflexion aus diffuser und spekularer Reflextion.
+
+2.2 Die ambiente Komponente bei der Phong Beleuchtung ist die Grundhelligkeit der Szene, sowie
+die indirekte Beleuchtung: Sie simuliert die Streuung des Lichts durch Oberflächen. Außerdem
+ist diese nicht abhängig vom einfallenden Licht sowie von dem Betrachtungswinkel. Die ambien-
+te Komponente ist dazu da damit die Szene nicht zu dunkel wird. Die ambiene Komponente
+existiert in der „realen Welt“ nicht da man bei absoluter Dunkelheit keine reflektion hat und es
+auch keine Grundhelligkeit im allgemeinen existiert.
