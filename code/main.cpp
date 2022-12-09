@@ -11,6 +11,8 @@
 #include "util.h"
 #include "vec3.h"
 
+const static bool TEST_REFLECTION_GENERATION = true;
+
 const static int SEED = 42;
 
 const static int WIDTH = 600;
@@ -32,20 +34,28 @@ Vec3d computePhongLighting(
     //////////
     // TODO 2:
     // Compute phong lighting.
+    auto ka = std::get<0>(phong_coeff);
+    auto kd = std::get<1>(phong_coeff);
+    auto ks = std::get<2>(phong_coeff);
+    auto n = std::get<3>(phong_coeff);
 
-    Vec3d I = std::get<0>(phong_coeff) * light_intensity;
-    Vec3d L = light_direction;
+    auto I = ka * light_intensity;
 
-    double NdotL = surface_normal.dot(L);
-    if(NdotL > 0) {
-        I += std::get<1>(phong_coeff) * light_intensity * NdotL;
-        
-        Vec3d R = 2. * surface_normal * NdotL - L;
-        R = R.normalize();
+    auto NdotL = surface_normal.dot(light_direction);
+    
+    
+    if (NdotL > 0){
 
-        double RdotV = R.dot(view_direction);
-        if(RdotV > 0) {
-            I += std::get<2>(phong_coeff) * light_intensity * std::pow(RdotV, std::get<3>(phong_coeff));
+        I += kd * light_intensity * NdotL;
+
+
+        auto R = light_direction.reflect(surface_normal);
+
+        R.normalize();
+        auto RdotV = R.dot(view_direction);
+        if(RdotV > 0 ){
+            auto spekular = ks * light_intensity * pow(RdotV,n);
+            I += spekular;
         }
     }
     //I = I.normalize();
@@ -225,6 +235,12 @@ void render(const Vec3i viewport, const std::vector<std::shared_ptr<SceneObject>
 
     // save the framebuffer an a PPM image
     saveAsPPM("./result.ppm", viewport, framebuffer);
+    if (TEST_REFLECTION_GENERATION)
+    {
+        // Check your ray generation and setup against the reference.
+        comparePPM("C:/Users/DASERDERT/Desktop/CG/aufgabe5CG/referenz.ppm",
+                   "ray reflection test", framebuffer);
+    }
 }
 
 /**
@@ -243,6 +259,7 @@ int main()
     // Start rendering
     const Vec3i viewport(WIDTH, HEIGHT, 0);
     render(viewport, objects, lights);
+    
 
     return 0;
 }
