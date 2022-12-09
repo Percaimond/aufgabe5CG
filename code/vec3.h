@@ -219,7 +219,8 @@ public:
         //////////
         // TODO 1:
         // Compute reflection of this vector with normal n.
-        return Vec3(); // replace
+        auto result = 2 * n * n.dot(*this) - *this;
+        return result;
         // END TODO 1
         /////////////
     }

@@ -114,51 +114,44 @@ Vec3d castRay(const Ray& ray, const std::vector<std::shared_ptr<SceneObject>>& o
 
     // Trace the ray. If an object gets hit, calculate the hit point and
     // retrieve the surface color 'hitColor' from the 'hitObject' object that was hit
-       if (trace(ray, objects, t, hitObject))
-    {
+    if (trace(ray, objects, t, hitObject)){
         hitColor = Vec3d();
 		// Intersection point with the hit object
-        Vec3d p_hit = ray.origin + ray.dir * t;
 
-        for (unsigned i=0; i < lights.size(); i++) {
-            Ray shadow_ray;
-            shadow_ray.origin = p_hit;
-            shadow_ray.dir = lights[i].getPosition();
-            double nearest;
-            std::shared_ptr<SceneObject> shadow_hit = nullptr;
+        const Vec3d p_hit = ray.origin + ray.dir * t;
 
-            if(trace(shadow_ray,objects,nearest,shadow_hit)){
-                Vec3d k_a = std::get<0>((*hitObject).getPhongCoefficients(p_hit));
-                double light_intensity = 0.01;
-                hitColor = k_a * light_intensity;
-                //apply ambient term only
-                //beleuchten Sie den Schnittpunkt direkt nur mit dem ambienten Term des Phong-Belechtungsmodells
-            };
 
-            /*
-            Vec3d const& view_direction,			//< direction from surface point to camera origin
-            Vec3d const& surface_normal,			//< normal vector at surface point
-            Vec3d const& light_direction,			//< direction from surface point to light source
-            PhongCoefficients const& phong_coeff,	//< phong coefficient k_a,k_d,k_s and n
-            Vec3d const& light_color,				//< color of the light source
-            double light_intensity)					//< intensity of the light source
-            */
 
-            const Vec3d cameraPos(-5, -1, 0.);
-            Vec3d view_direction = Vec3d(cameraPos[0]-p_hit[0], cameraPos[1]-p_hit[1], cameraPos[2]-p_hit[2]);
-            Vec3d surface_normal = (*hitObject).getSurfaceNormal(p_hit);
-            Vec3d light_pos = lights[i].getPosition();
-            Vec3d light_direction = Vec3d(light_pos[0]-p_hit[0], light_pos[1]-p_hit[1], light_pos[2]-p_hit[2]);
-            PhongCoefficients phong_coeff = (*hitObject).getPhongCoefficients(p_hit);
-            Vec3d light_color = lights[i].getColor();
-            double light_intensity = 0.09;
+
+        for (auto light: lights){
+            Ray fromHitpointToLight = Ray();
+            fromHitpointToLight.origin = p_hit + std::numeric_limits<float>::epsilon() * hitObject -> getSurfaceNormal(p_hit);
+            fromHitpointToLight.dir = light.getPosition() - p_hit;
+            fromHitpointToLight.dir.normalize();
             
-            view_direction = (view_direction).normalize();
-            surface_normal = (surface_normal).normalize();
-            light_direction = (light_direction).normalize();
+            double t_inner = std::numeric_limits<double>::max();
+            std::shared_ptr<SceneObject> hitObject_inner = nullptr;
+            bool hasObjectBetweenLightAndItself = trace(fromHitpointToLight,objects,t_inner,hitObject_inner);
+            
+            auto p_hit_inner = fromHitpointToLight.origin * fromHitpointToLight.dir *t_inner;
 
-            hitColor = computePhongLighting(view_direction,surface_normal,light_direction,phong_coeff,light_color,light_intensity);
+            auto attenutaed_light_intensity = light.getIntensity() /(pow(light.getPosition().distance(p_hit),2.0));
+            auto p_hit_norm = p_hit * (1/p_hit.length());
+            if(hasObjectBetweenLightAndItself){
+                hitColor += std::get<0>(hitObject -> getPhongCoefficients(p_hit)) * attenutaed_light_intensity;
+            } else{
+                hitColor += computePhongLighting(ray.dir, p_hit_norm, fromHitpointToLight.dir, hitObject -> getPhongCoefficients(p_hit), light.getColor(), attenutaed_light_intensity);
+            }
+
+
         }
+        
+
+        Ray reflectionRay = Ray();
+        reflectionRay.origin = p_hit + std::numeric_limits<float>::epsilon() * hitObject -> getSurfaceNormal(p_hit);
+        reflectionRay.dir = (-(ray.dir)).reflect(hitObject->getSurfaceNormal(p_hit));
+        reflectionRay.depth = ray.depth + 1;
+        hitColor += castRay(reflectionRay,objects,lights);
         //////////
         // TODO 3:
         // Compute local lighting. The result is added to "hitColor".
